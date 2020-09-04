@@ -30,25 +30,25 @@ function employeeQuestions() {
         message: "What is your email?"
     },
     {
-        type: "input",
+        type: "list",
         name: "role",
         message: "What is your job title?",
-        choices: ["intern", 'manager', 'engineer']
+        choices: ["Intern", 'Manager', 'Engineer']
     }
     ]);
 } 
 // Basic Employee Questions
 employeeQuestions()
     .then(function(answers){
-        if(answers.role == "intern" ){
-            return internQuestions() ;
+        if(answers.role == "Intern" ){
+            return internQuestions(answers) ;
             
             
-        } else if (answers.role == "manager"){
-            return managerQuestions();
+        } else if (answers.role == "Manager"){
+            return managerQuestions(answers);
 
-        } else if (answers.role == "engineer"){
-            return engineerQuestions();
+        } else if (answers.role == "Engineer"){
+            return engineerQuestions(answers);
             
         } 
     })
@@ -59,7 +59,7 @@ employeeQuestions()
 
 
 // Intern school question
-    function internQuestions() {
+    function internQuestions(employee_answers) {
         return inquirer.prompt([
             {
             type: "input",
@@ -68,15 +68,16 @@ employeeQuestions()
             }
 ])
     .then(function(answers){
-        let intern = new Intern (answers.name, answers.id, answers.email, answers.school)
-    team.push(intern);
-console.log("intern success")
-console.log(team);
-    });
+        let intern = new Intern (employee_answers.name, employee_answers.id, employee_answers.email, answers.school)
+            team.push(intern);
+            console.log("intern added")
+            console.log(team);
+            addEmployee();
+    }) 
 }
 
 // Engineer username question
-    function engineerQuestions() {
+    function engineerQuestions(employee_answers) {
         return inquirer.prompt([
         {
         type: "input",
@@ -85,15 +86,16 @@ console.log(team);
         }
     ])
     .then(function(answers){
-        let engineer = new Engineer (answers.name, answers.id, answers.email, answers.github)
+        let engineer = new Engineer (employee_answers.name, employee_answers.id, employee_answers.email, answers.github)
             team.push(engineer);
-            console.log("engineer success")
+            console.log("engineer added")
             console.log(team);
+            addEmployee()
     })
 }
 
 // Manager question
-    function managerQuestions() {
+    function managerQuestions(employee_answers) {
         return inquirer.prompt([
             {
             type: "input",
@@ -102,36 +104,36 @@ console.log(team);
             }
         ])
     .then(function(answers){
-        let manager = new Manager (answers.name, answers.id, answers.email, answers.officeNumber)
+        let manager = new Manager (employee_answers.name, employee_answers.id, employee_answers.email, answers.officeNumber)
             team.push(manager);
-            console.log("manager success")
-            console.log(manager);
+            console.log("manager added")
+            console.log(team);
+            addEmployee()
 
     })
-    .then(function(){
-        addEmployee();
-    })
+
 }
 
-// Add another Employee function
-    
+// Add another Employee function or render
+
     function addEmployee(){
-        return inquirer.prompt ([
+        inquirer.prompt ([
             {
             type: "confirm",
             name: "addMember",
-            Message: "Add another employee to the team?"
+            message: "Add another employee to the team?"
             }
-        ])
-    }
-    // If yes go back to employeeQuestions else push team to render
-    addEmployee()
-        .then(function(answers){
-            if(answers.addMember === "yes"){
-                return employeeQuestions();
+        ]).then(function(answers){
+            if(answers.addMember){
+                employeeQuestions();
             } else {
-                return team.push(render);
+                console.log("Render team" + team)
+                // var html = render(team);
+                // //write the html to the output file.
+                // fs.writeFileSync('team.html', html, function(err){
+                //     if (err) return (err);
+                // })
             }
         })
-    
+    }
 
