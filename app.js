@@ -35,18 +35,15 @@ function employeeQuestions() {
         message: "What is your job title?",
         choices: ["Intern", 'Manager', 'Engineer']
     }
-    ]);
-} 
-// Basic Employee Questions
-employeeQuestions()
+    ])
+    // If then depending on what Job title they choose
     .then(function(answers){
         if(answers.role == "Intern" ){
             return internQuestions(answers) ;
             
-            
         } else if (answers.role == "Manager"){
             return managerQuestions(answers);
-
+    
         } else if (answers.role == "Engineer"){
             return engineerQuestions(answers);
             
@@ -56,6 +53,9 @@ employeeQuestions()
                 console.log("Not a valid job position.");
                 console.log(err);
             })
+} 
+// Basic Employee Questions
+employeeQuestions()
 
 
 // Intern school question
@@ -70,7 +70,7 @@ employeeQuestions()
     .then(function(answers){
         let intern = new Intern (employee_answers.name, employee_answers.id, employee_answers.email, answers.school)
             team.push(intern);
-            console.log("intern added")
+            console.log("Intern added")
             console.log(team);
             addEmployee();
     }) 
@@ -86,11 +86,11 @@ employeeQuestions()
         }
     ])
     .then(function(answers){
-        let engineer = new Engineer (employee_answers.name, employee_answers.id, employee_answers.email, answers.github)
+        let engineer = new Engineer (employee_answers.name, employee_answers.id, employee_answers.email, answers.username)
             team.push(engineer);
-            console.log("engineer added")
+            console.log("Engineer added")
             console.log(team);
-            addEmployee()
+            addEmployee();
     })
 }
 
@@ -106,9 +106,9 @@ employeeQuestions()
     .then(function(answers){
         let manager = new Manager (employee_answers.name, employee_answers.id, employee_answers.email, answers.officeNumber)
             team.push(manager);
-            console.log("manager added")
+            console.log("Manager added")
             console.log(team);
-            addEmployee()
+            addEmployee();
 
     })
 
@@ -127,12 +127,13 @@ employeeQuestions()
             if(answers.addMember){
                 employeeQuestions();
             } else {
-                console.log("Render team" + team)
-                // var html = render(team);
+                var html = render(team);
+
                 // //write the html to the output file.
-                // fs.writeFileSync('team.html', html, function(err){
-                //     if (err) return (err);
-                // })
+                fs.writeFile(outputPath, html, function (err) {
+                    if (err) return console.log(err);
+                    console.log("Team HTML Rendered");
+                });
             }
         })
     }
